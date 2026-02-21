@@ -1,0 +1,85 @@
+{
+  "cookies": [
+    {
+      "name": "lang",
+      "value": "en",
+      "domain": "m.litedev.com",
+      "path": "/",
+      "expires": 1806208267.895332,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "token",
+      "value": "cc23bae30dcbce1a6b5511ec90dc6c94f08c8f8248b6bcfeaf1f276788d546a1d240ca9f9e9b502552ffe0e818415c279b2a401c10b2e73a405038dcc21b2f96cd2deb8b89bd363b32e17c44f613b2b39fb03b20c0b0bb744cb423035b213a7b775afa1740822f90cfe7f2494e46bcde97e5a832b79b806fd45d59eaf997ef9b754b2b5217f8b31445520801608d1e9be083f2ec3e35b338ac6c0c72db9d75093baff52ee526e091731241c10dc66b3d4abf6849a8bcdb1ef707f72edfb7a43a87c9c086524c5379784c459e9af7cbc8a9b1f853cc0b54f282cd14a7fa9b405861714a73d805e972de09ce94cd4b9836b2923d40ef0b8f3990584565ce1db8a6b8bf95f2bc567013828e2ddbede98a4ecbcb0d850b50040f7507947498fe58d5b85ffd5daae88ac6441808f5de48ce35bf3e4b686713c7daa90f420a73651c7d4ee91dec6526dbf7c2120005b4a2b6a2110b5b5c539be138e7c5b8656069a722c815fb4e9524f7cef3605cfe5705f969dbe3aff53e314e53e2a63c01ed0bac47b11946f829ad472d23b3cb710918c9b94c0aceb984ab907ae5d7bfb7087f1e4fbbb9e0a82fa019389b7689cc288e89bede3438a32fb306e943d6c3f4236e87861009262159f0167e1edddaa49775a10204ec1843401028cf67ed3f8e71c6e4f3fcfeaf2c69178c56829f85cfd2181cee10d3f2b25135c5f8571e3f31229f18d45e3a041718dd76145afbfb956c4b2b3bc2488f65124f733ee3a97e3dd2768cebd81a26a450d3aa184647a1faa316773247cfe9e28a8e99ce3a9709c1998a5a3840986487ea27c660f5cd24a77f1ee7569216dbec947ab731d754a5f97b3f01e0f39b0230b7701ac7a3b687c9df92e28a6c2c15141803add24ab056576eb7558dfb15448e395b53ff470083907d912aa382f563f1346311bcab62dad3bbfe53ce3b0759db970af4e5208dba65ea729a1a029b5f22a0586fc42f97e41f257ae6b986c7dc7fdfad796f9fc99a53f315a956dd7c0fa8e8323f4cc16a7d2cb7dd30a1e5d8ef980a77f30fce88aef043934763c896281cc82368d0a9f61b56b4aafc9fa704b90c8b846a704b527bf01e5d530682687822c5fac95ba9b5aa3cb483929a6ab851dac7345ae16e2bbc9397eb0594d3b7b4e72fee2f5180696be36201a5b6a3c8bfd6014f69c5a7971823739dfe8672ecaedf23e9e4ba17ceacf0de72a8f13a53676975a2b65de894e97765ac54290607f16ebcb43beee093464e7723dae6",
+      "domain": "m.litedev.com",
+      "path": "/",
+      "expires": 1771734679,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gcl_au",
+      "value": "1.1.1514300017.1771648281",
+      "domain": ".litedev.com",
+      "path": "/",
+      "expires": 1779424281,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_L1QSPLFZ19",
+      "value": "GS2.1.s1771648281$o1$g0$t1771648281$j60$l0$h0",
+      "domain": ".litedev.com",
+      "path": "/",
+      "expires": 1806208281.436614,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.1.2002566163.1771648281",
+      "domain": ".litedev.com",
+      "path": "/",
+      "expires": 1806208281.437707,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://m.litedev.com",
+      "localStorage": [
+        {
+          "name": "pageNum",
+          "value": "1"
+        },
+        {
+          "name": "lang",
+          "value": "en"
+        },
+        {
+          "name": "enablePharmacy",
+          "value": "true"
+        },
+        {
+          "name": "currPage",
+          "value": "1"
+        },
+        {
+          "name": "_gcl_ls",
+          "value": "{\"schema\":\"gcl\",\"version\":1,\"gcl_ctr\":{\"value\":{\"value\":0,\"timeouts\":0,\"errors\":0,\"creationTimeMs\":1771648281405},\"expires\":1779424281405}}"
+        },
+        {
+          "name": "symptoms",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}
