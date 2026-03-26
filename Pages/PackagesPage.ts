@@ -125,4 +125,25 @@ export class PackagesPage {
     await bookNowBtn.click();
   }
 
-}
+    // ✅ NEW METHOD → Nurse visit procedure selection
+    async verifyNurseVisitLoaded() {
+    await expect(
+      this.page.getByText('Nursing task', { exact: true })
+    ).toBeVisible();
+  } 
+    async selectNurseVisitProcedure(procedureName: string) {
+
+    // Click procedure text
+    await this.page.getByText(procedureName).waitFor({ state: 'visible' });
+    await this.page.getByText(procedureName).click();
+
+// Click Select button
+    const selectBtn = this.page.getByRole('button', { name: 'Select' });
+    await selectBtn.waitFor({ state: 'visible' });
+    await selectBtn.click();
+
+    // Click Continue
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+    }
+
+  }

@@ -44,4 +44,30 @@ export class SlotPage {
 
     throw new Error('❌ No available slot found to select');
   }
+
+// ---------------- Nurse Visit specific methods ----------------
+      async verifyNurseVisitLoaded() {
+    await expect(
+      this.page.getByText('Select Center', { exact: true })
+    ).toBeVisible();
+  } 
+
+// ---------------- Select First Hospital & Slot ----------------
+async selectFirstHospitalAndSlot() {
+
+  // Select first hospital
+const firstHospital = this.page.locator('div:has-text("Visit")').first();
+await firstHospital.click();
+
+  // Wait for slots to load
+  await this.page.waitForTimeout(2000);
+
+  // Select first enabled slot
+  const slot = this.page.locator('button:enabled').first();
+  await slot.click();
+
+  // Click Next
+  await this.page.getByRole('button', { name: 'Next' }).click();
+}
+
 }

@@ -73,8 +73,10 @@ export class LoginPage {
         await otpInputs.nth(i).fill(otp[i]);
       }
 
-      const continueButton = this.page.getByRole('button', { name: 'Continue' });
-      await continueButton.click();
+      // const continueButton = this.page.getByRole('button', { name: 'Continue' });
+      // await continueButton.click();
+      const button = this.page.locator("//div[@class='sa-text-right']/descendant::button");
+      await button.click();
     }
   }
 }

@@ -7,7 +7,7 @@ import { PatientPage } from '../Pages/PatientPage';
 import { PaymentPage } from '../Pages/PaymentPage';
 import { ConfirmationPage } from '../Pages/ConfirmationPage';
 
-test('User can book Radiology service end-to-end', async ({ page }) => {
+test('User can book Nurse visit service end-to-end', async ({ page }) => {
 
   // 1️⃣ Open Dashboard
   await page.goto('/');
@@ -15,15 +15,15 @@ test('User can book Radiology service end-to-end', async ({ page }) => {
   const dashboard = new DashboardPage(page);
   await dashboard.verifyDashboardLoaded();
 
-  // ✅ Select Radiology
-  await dashboard.selectService('Radiology');
+  // ✅ Select Nurse visit
+  await dashboard.selectService('Nurse visit');
 
   // 2️⃣ Packages / Procedures page
   const packagesPage = new PackagesPage(page);
-  await packagesPage.verifyRadiologyLoaded();
+  await packagesPage.verifyNurseVisitLoaded();
 
-  // ✅ Radiology procedure
-  await packagesPage.selectRadiologyProcedure('Removal of Stitches');
+  // ✅ Nurse visit procedure
+  await packagesPage.selectNurseVisitProcedure('Nebulisation');
 
   // 3️⃣ Location
   const location = new LocationPage(page);
@@ -32,8 +32,8 @@ test('User can book Radiology service end-to-end', async ({ page }) => {
 
   // 4️⃣  Slot
   const slotPage = new SlotPage(page);
-  await slotPage.verifyLoaded();
-  await slotPage.selectFirstAvailableSlot();
+  await slotPage.verifyNurseVisitLoaded
+  await slotPage.selectFirstHospitalAndSlot();
 
   // 5️⃣ Patient
   const patientPage = new PatientPage(page);
@@ -55,5 +55,5 @@ test('User can book Radiology service end-to-end', async ({ page }) => {
   await confirmationPage.goToHome();
 
   // 8️⃣ Pause (optional)
-  // await page.pause();
+  await page.pause();
 });

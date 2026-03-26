@@ -15,6 +15,13 @@ export class BookingOptionsPage {
     }
   }
 
+  //Click Start Consultation Now button
+  async continueWithInsurance() {
+    await this.page
+      .getByRole('button', { name: 'Start Consultation Now' })
+      .click();
+  } 
+
   // Click Go to Packages and Lab Tests
   async continueWithoutInsurance() {
     await this.page
