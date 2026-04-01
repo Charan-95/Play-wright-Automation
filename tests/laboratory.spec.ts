@@ -41,7 +41,7 @@ if (isBookingOptionsVisible) {
   // 3️⃣ Packages page
   const packagesPage = new PackagesPage(page);
   await packagesPage.verifyLabLoaded(); // Optional verification
-  await packagesPage.selectPackage('Health Check packages'); //Diabete 1st Visit
+  await packagesPage.selectPackage('Full Body Health Checkup'); //Diabete 1st Visit
 
     // 4️⃣ Location page
   const location = new LocationPage(page);
