@@ -52,22 +52,61 @@ export class SlotPage {
     ).toBeVisible();
   } 
 
-// ---------------- Select First Hospital & Slot ----------------
-async selectFirstHospitalAndSlot() {
+// ---------------- Select First Hospital ----------------
+async selectFirstHospital() {
 
   // Select first hospital
-const firstHospital = this.page.locator('div:has-text("Visit")').first();
+const firstHospital = this.page.locator('li.sa-nurse-det').first();
 await firstHospital.click();
+}
 
   // Wait for slots to load
-  await this.page.waitForTimeout(2000);
+ async verifyNurseslotsLoaded() {
+  const slotContainer = this.page.locator('ul.sa-slot-btn.sa-available-slots');
+  const slots = slotContainer.locator('li');
 
-  // Select first enabled slot
-  const slot = this.page.locator('button:enabled').first();
-  await slot.click();
+  // Wait for container
+  await expect(slotContainer).toBeVisible({ timeout: 20000 });
+
+  // Wait until at least one slot is visible
+  await expect(slots.first()).toBeVisible({ timeout: 20000 });
+}
+  // Select first av slot
+async selectNurseFirstAvailableSlot() {
+  const slotContainer = this.page.locator('ul.sa-slot-btn.sa-available-slots');
+  const slots = slotContainer.locator('li');
+
+  // Wait until slots are loaded
+  await expect(slots.first()).toBeVisible({ timeout: 20000 });
+
+  const count = await slots.count();
+  console.log(`🕒 Slots found: ${count}`);
+
+  for (let i = 0; i < count; i++) {
+    const slot = slots.nth(i);
+
+    if (await slot.isVisible()) {
+      await slot.scrollIntoViewIfNeeded();
+      await slot.click();
+      return;
+    }
+  }
+
+  throw new Error('❌ No available slot found to select');
+
+}
+
 
   // Click Next
-  await this.page.getByRole('button', { name: 'Next' }).click();
+  async clickNext() {
+const nextButton = this.page.getByRole('button', { name: 'Next' });
+
+// Wait until button is enabled (important)
+await expect(nextButton).toBeEnabled({ timeout: 10000 });
+
+await nextButton.click();
+
 }
 
 }
+

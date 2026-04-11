@@ -33,7 +33,10 @@ test('User can book Nurse visit service end-to-end', async ({ page }) => {
   // 4️⃣  Slot
   const slotPage = new SlotPage(page);
   await slotPage.verifyNurseVisitLoaded
-  await slotPage.selectFirstHospitalAndSlot();
+  await slotPage.selectFirstHospital();
+  await slotPage.verifyNurseslotsLoaded();
+  await slotPage.selectNurseFirstAvailableSlot();
+  await slotPage.clickNext();
 
   // 5️⃣ Patient
   const patientPage = new PatientPage(page);

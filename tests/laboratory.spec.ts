@@ -70,7 +70,7 @@ if (isBookingOptionsVisible) {
   await paymentPage.enterCardDetails('Ayoub AL YUSUF', '4242424242424242', '12/27', '123');
   await paymentPage.clickPay();
   await paymentPage.handle3DSAuthentication();
-
+  
    // 8️⃣ Confirmation page
   const confirmationPage = new ConfirmationPage(page);
   await confirmationPage.verifyLoaded();
