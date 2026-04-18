@@ -8,75 +8,71 @@ import { PatientPage } from '../Pages/PatientPage';
 import { PaymentPage } from '../Pages/PaymentPage';
 import { ConfirmationPage } from '../Pages/ConfirmationPage';
 
-// Future pages:
-// import { PatientPage } from '../Pages/PatientPage';
-// import { PaymentPage } from '../Pages/PaymentPage';
+test.setTimeout(10 * 60 * 1000); // 10 minutes
 
-test('User can book Laboratory service end-to-end', async ({ page }) => {
+// Define the payment methods to test
+const paymentMethods: ('card' | 'wallet')[] = ['card', 'wallet'];
 
-  // 1️⃣ Open Dashboard directly (using storageState)
-  await page.goto('/');
+test.describe('Laboratory service booking flow', () => {
+  for (const method of paymentMethods) {
+    test(`User can book Laboratory service end-to-end with ${method} payment`, async ({ page }) => {
+      // 1️⃣ Dashboard
+      await page.goto('/');
+      const dashboard = new DashboardPage(page);
+      await dashboard.verifyDashboardLoaded();
+      await dashboard.selectService('Laboratory');
 
-  const dashboard = new DashboardPage(page);
+      // 2️⃣ Booking Options
+      const bookingOptions = new BookingOptionsPage(page);
+      if (await bookingOptions.verifyLoaded()) {
+        await bookingOptions.continueWithoutInsurance();
+      }
 
-  // Verify dashboard loaded
-  await dashboard.verifyDashboardLoaded();
+      // 3️⃣ Packages
+      const packagesPage = new PackagesPage(page);
+      await packagesPage.verifyLabLoaded();
+      await packagesPage.selectPackage('Full Body Health Checkup');
 
-  // Select Laboratory service
-  await dashboard.selectService('Laboratory');
+      // 4️⃣ Location
+      const location = new LocationPage(page);
+      await location.verifyLoaded();
+      await location.searchAndSelectLocation('Riyadh Gallery Mall');
 
-  // 2️⃣ Booking Options page
-const bookingOptions = new BookingOptionsPage(page);
+      // 5️⃣ Slot
+      const slotPage = new SlotPage(page);
+      await slotPage.verifyLoaded();
+      await slotPage.selectFirstAvailableSlot();
 
-const isBookingOptionsVisible = await bookingOptions.verifyLoaded();
+      // 6️⃣ Patient
+      const patientPage = new PatientPage(page);
+      await patientPage.verifyLoaded();
+      await patientPage.selectFirstPatient();
+      await patientPage.clickContinueToReachPayment();
 
-if (isBookingOptionsVisible) {
-  console.log('Booking Options page detected, continuing...');
-  await bookingOptions.continueWithoutInsurance();
-} else {
-  console.log('Booking Options page not present, skipping...');
-}
+      // 7️⃣ Payment
+      const paymentPage = new PaymentPage(page);
 
+      if (method === 'wallet') {
+        await paymentPage.enableWallet();
+        await paymentPage.verifyWalletMode();
+        await paymentPage.completeBookingWithWallet();
+      } else {
+        await paymentPage.selectCardOption();
+        await paymentPage.addNewCard();
+        await paymentPage.enterCardDetails(
+          'Ayoub AL YUSUF',
+          '4242424242424242',
+          '12/27',
+          '123'
+        );
+        await paymentPage.clickPay();
+        await paymentPage.handle3DSAuthentication();
+      }
 
-  // 3️⃣ Packages page
-  const packagesPage = new PackagesPage(page);
-  await packagesPage.verifyLabLoaded(); // Optional verification
-  await packagesPage.selectPackage('Full Body Health Checkup'); //Diabete 1st Visit
-
-    // 4️⃣ Location page
-  const location = new LocationPage(page);
-  await location.verifyLoaded();
-  await location.searchAndSelectLocation('Riyadh Gallery Mall');
-
-    // 5️⃣ Slot Selection (no POM yet — handled safely here)
-  const slotPage = new SlotPage(page);
-  await slotPage.verifyLoaded();
-  await slotPage.selectFirstAvailableSlot();
-
-    // 6️⃣ Patient details page
-  const patientPage = new PatientPage(page);
-  await patientPage.verifyLoaded();
-  await patientPage.selectFirstPatient();
-  await patientPage.clickContinueToReachPayment();
-    
-    // 7️⃣ Payment page
-  const paymentPage = new PaymentPage(page);
-  // await paymentPage.verifyLoaded();
-  // await paymentPage.enableWallet();
-  // await paymentPage.verifyWalletMode();
-  // await paymentPage.completeBookingWithWallet();
-  await paymentPage.selectCardOption();
-  await paymentPage.addNewCard();
-  await paymentPage.enterCardDetails('Ayoub AL YUSUF', '4242424242424242', '12/27', '123');
-  await paymentPage.clickPay();
-  await paymentPage.handle3DSAuthentication();
-  
-   // 8️⃣ Confirmation page
-  const confirmationPage = new ConfirmationPage(page);
-  await confirmationPage.verifyLoaded();
-  // optional
-  await confirmationPage.goToHome();
-  // or
-  // await confirmationPage.goToMyBooking();
-  
+      // 8️⃣ Confirmation
+      const confirmationPage = new ConfirmationPage(page);
+      await confirmationPage.verifyLoaded();
+      await confirmationPage.goToHome(); // or confirmationPage.goToMyBooking();
+    });
+  }
 });

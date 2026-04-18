@@ -10,12 +10,12 @@ export class PackagesPage {
   // ✅ Method to select Eclinics department (used for Virtual Consultations)
   async verifyEclinicsLoaded() {
 
-  const heading = this.page
-    .getByRole('heading', { name: 'Virtual Clinics', exact: true })
-    .first();
+    const heading = this.page
+      .getByRole('heading', { name: 'Virtual Clinics', exact: true })
+      .first();
 
-  await expect(heading).toBeVisible({ timeout: 20000 });
-}
+    await expect(heading).toBeVisible({ timeout: 20000 });
+  }
   async selectEclinicsDepartment() {
 
     // Click Family Medicine
@@ -51,14 +51,14 @@ export class PackagesPage {
     await this.page.getByRole('button', { name: 'Continue' }).click();
   }
 
-   // ✅ NEW METHOD → Radiology procedure selection
-    async verifyRadiologyLoaded() {
+  // ✅ NEW METHOD → Radiology procedure selection
+  async verifyRadiologyLoaded() {
     await expect(
       this.page.getByText('Radiology At Home', { exact: true })
     ).toBeVisible();
   }
 
-    async selectRadiologyProcedure(procedureName: string) {
+  async selectRadiologyProcedure(procedureName: string) {
 
     // Click procedure text
     await this.page.getByText(procedureName).waitFor({ state: 'visible' });
@@ -79,15 +79,15 @@ export class PackagesPage {
     await locationSearch.click();
   }
 
-    // ✅ NEW METHOD → Vitamin IV package selection
+  // ✅ NEW METHOD → Vitamin IV package selection
 
-      async verifyVitaminIVLoaded() {
+  async verifyVitaminIVLoaded() {
     await expect(
       this.page.getByText('Vitamin IV Drips', { exact: true })
     ).toBeVisible();
   }
 
-     async selectVitaminIVPackage(procedureName: string) {
+  async selectVitaminIVPackage(procedureName: string) {
 
     // Locate the close icon using its CSS class and click it
     await this.page.waitForTimeout(1000); // Wait for potential popups to load
@@ -108,14 +108,14 @@ export class PackagesPage {
     await this.page.getByRole('button', { name: 'Continue' }).click();
   }
 
-    // ✅ NEW METHOD → Home visit doctor package selection
-      async verifyHomeVisitDoctorLoaded() {
+  // ✅ NEW METHOD → Home visit doctor package selection
+  async verifyHomeVisitDoctorLoaded() {
     await expect(
       this.page.getByText('Home visit doctor', { exact: true })
     ).toBeVisible();
   }
-    async selectHomeVisitDoctor() {
-      await this.page.waitForTimeout(1000); // Wait for page to load
+  async selectHomeVisitDoctor() {
+    await this.page.waitForTimeout(1000); // Wait for page to load
     const detailsTab = this.page.getByText('Details', { exact: true });
     const bookNowBtn = this.page.getByRole('button', { name: 'Book Now', exact: true });
 
@@ -125,25 +125,40 @@ export class PackagesPage {
     await bookNowBtn.click();
   }
 
-    // ✅ NEW METHOD → Nurse visit procedure selection
-    async verifyNurseVisitLoaded() {
+  // ✅ NEW METHOD → Nurse visit procedure selection
+  async verifyNurseVisitLoaded() {
     await expect(
       this.page.getByText('Nursing task', { exact: true })
     ).toBeVisible();
-  } 
-    async selectNurseVisitProcedure(procedureName: string) {
+  }
+  async selectNurseVisitProcedure(procedureName: string) {
 
     // Click procedure text
     await this.page.getByText(procedureName).waitFor({ state: 'visible' });
     await this.page.getByText(procedureName).click();
 
-// Click Select button
+    // Click Select button
     const selectBtn = this.page.getByRole('button', { name: 'Select' });
     await selectBtn.waitFor({ state: 'visible' });
     await selectBtn.click();
 
     // Click Continue
     await this.page.getByRole('button', { name: 'Continue' }).click();
-    }
+  }
+
+  // ✅ NEW METHOD → Physiotherapy procedure selection
+  async verifyPhysiotherapyLoaded() {
+    await expect(
+      this.page.getByText('Physiotherapy At Home', { exact: true })
+    ).toBeVisible();
+  }
+  async selectPhysiotherapyProcedure(procedureName: string) {
+
+    // Click procedure text
+    await this.page.getByText(procedureName).waitFor({ state: 'visible' });
+    await this.page.getByText(procedureName).click();
+
 
   }
+
+}

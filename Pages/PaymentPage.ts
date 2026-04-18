@@ -25,7 +25,7 @@ export class PaymentPage {
   async addNewCard() {
     const addCard = this.page.getByText('Add new card');
     await addCard.waitFor({ state: 'visible', timeout: 30000 });
-    await addCard.click();  
+    await addCard.click();
   }
   // Enter card details (Checkout Frames)
   async enterCardDetails(
@@ -35,68 +35,75 @@ export class PaymentPage {
     cvv: string
   ) {
 
-    /* ---------- Card Holder (NORMAL FIELD, NOT IFRAME) ---------- */
-    const holder = this.page.locator('#noc:visible');
-    await holder.waitFor({ state: 'visible', timeout: 30000 });
+    // Switch to Cardholder iframe
+    const cardHolderFrame = this.page.frameLocator('iframe[data-testid="cardholder-name"]');
+
+    // Locate input
+    const holder = cardHolderFrame.locator('input[name="cardholder-name"]');
+
+    // Wait & fill
+    await holder.waitFor({ state: 'visible' });
     await holder.fill(cardHolder);
 
 
-    /* ---------- Card Number (iframe id="cardNumber") ---------- */
-    const cardNumberFrame = this.page.frameLocator('#cardNumber');
-    const cardNumberInput = cardNumberFrame.getByPlaceholder('Card number');
+    // Card Number
+    const cardNumberFrame = this.page.frameLocator('iframe[data-testid="card-number"]');
 
-    await cardNumberInput.waitFor({ state: 'visible', timeout: 30000 });
-    await cardNumberInput.fill(cardNumber);
+    const cardNo = cardNumberFrame.locator('input[name="card-number"]');
 
-
-    /* ---------- Expiry (iframe id="expiryDate") ---------- */
-    const expiryFrame = this.page.frameLocator('#expiryDate');
-    const expiryInput = expiryFrame.getByPlaceholder('MM/YY');
-
-    await expiryInput.waitFor({ state: 'visible', timeout: 30000 });
-    await expiryInput.fill(expiry);
+    await cardNo.waitFor({ state: 'visible' });
+    await cardNo.fill(cardNumber); // test card
 
 
-    /* ---------- CVV (iframe name="checkout-frames-cvv") ---------- */
-  const cvvFrame = this.page.frameLocator('iframe[name="checkout-frames-cvv"]');
-  const cvvInput = cvvFrame.getByPlaceholder('CVV');
+    // Expiry Date
+    const expiryFrame = this.page.frameLocator('iframe[data-testid="card-expiry-date"]');
 
-  await cvvInput.waitFor({ state: 'visible', timeout: 30000 });
-  await cvvInput.fill(cvv);
+    const expiryDate = expiryFrame.locator('input[name="card-expiry-date"]');
+
+    await expiryDate.waitFor({ state: 'visible' });
+    await expiryDate.fill(expiry); // MM/YY
+
+
+    // CVV
+    const cvvFrame = this.page.frameLocator('iframe[data-testid="card-cvv"]');
+
+    const securityCode = cvvFrame.locator('input[name="card-cvv"]');
+
+    await securityCode.waitFor({ state: 'visible' });
+    await securityCode.fill(cvv);
   }
 
   // Click Pay button
   async clickPay() {
-    const payBtn = this.page.getByRole('button', { name: 'Pay with Credit/debit card' });
+
+    const payBtn = this.page.getByRole('button', { name: 'Pay', exact: true });
     await payBtn.waitFor({ state: 'visible', timeout: 30000 });
     await payBtn.click();
+
   }
 
-// Handle 3DS Authentication (INSIDE IFRAME)
-async handle3DSAuthentication() {
+  // Handle 3DS Authentication (INSIDE IFRAME)
+  async handle3DSAuthentication() {
+    const password = 'Checkout1!';
 
-  // Wait until redirected to 3DS URL
-  await this.page.waitForURL(/authentication-devices\.sandbox\.checkout\.com/, {
-    timeout: 90000
-  });
+    // 1. Wait for outer iframe
+    const outerFrame = this.page.frameLocator('iframe#threeDS-modal-iframe');
 
-  // 3DS is inside an iframe → get the frame
-  const threeDSFrame = this.page.frameLocator('iframe');
+    // 2. Wait for ANY iframe inside it (important step)
+    const innerFrame = outerFrame.frameLocator('iframe');
 
-  // Wait for password field inside iframe
-  const passwordInput = threeDSFrame.locator('#password');
-  await passwordInput.waitFor({ state: 'visible', timeout: 30000 });
+    // 3. Now locate password inside inner frame
+    const input = innerFrame.locator('input[type="password"]');
 
-  // Fill password
-  await passwordInput.fill('Checkout1!');
+    await expect(input).toBeVisible({ timeout: 60000 });
 
-  // Click Continue button
-  const continueBtn = threeDSFrame.locator('#txtButton');
-  await continueBtn.click();
+    await input.fill(password);
 
-}
+    const continueBtn = innerFrame.locator('button, input[type="submit"]').first();
+    await continueBtn.click();
+  }
 
- // ---------------- Wallet Payment Flow ----------------
+  // ---------------- Wallet Payment Flow ----------------
 
   // Enable Wallet toggle (handles hidden checkbox)
   async enableWallet() {
@@ -131,7 +138,7 @@ async handle3DSAuthentication() {
   async completeBookingWithWallet() {
     const completeBtn = this.page.getByRole('button', { name: 'Complete the booking' });
     await completeBtn.waitFor({ state: 'visible', timeout: 30000 });
-    await completeBtn.click();  
+    await completeBtn.click();
   }
 
 }
