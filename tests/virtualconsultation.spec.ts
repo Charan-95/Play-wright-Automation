@@ -31,7 +31,7 @@ test('User can book Virtual Consultations service end-to-end', async ({ page }) 
   const patientPage = new PatientPage(page);
   await patientPage.verifyLoaded();
   await patientPage.selectFirstPatient();
-  await patientPage.handleInsurancePopup();
+  await patientPage.handleInsurancePopup('No');
   await patientPage.clickContinueToReachPayment();
 
   // 5️⃣ Payment 

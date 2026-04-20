@@ -161,4 +161,31 @@ export class PackagesPage {
 
   }
 
+  // New method Kids Vaccination selection
+
+  
+  async verifyKidsVaccinationLoaded() {
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+    await expect(
+      this.page.getByText('Kids Vaccination', { exact: true })
+    ).toBeVisible();
+  }
+  async selectVaccination(vaccineName: string) {
+
+    // Click vaccine text
+    await this.page.getByText(vaccineName, {exact: true}).waitFor({ state: 'visible' });
+    await this.page.getByText(vaccineName, {exact: true}).click();
+
+    // Click Book Now
+    await this.page.getByRole('button', { name: 'Book Now' }).click();
+  } 
+
+  async verifyEligibilityLoaded() {
+    await expect(
+      this.page.getByRole('heading', { name: 'Eligibility & Health Conditions' })
+    ).toBeVisible();
+    await this.page.locator("label[for='details']").click();
+
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+  }
 }

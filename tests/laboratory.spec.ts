@@ -67,6 +67,7 @@ test.describe('Laboratory service booking flow', () => {
         );
         await paymentPage.clickPay();
         await paymentPage.handle3DSAuthentication();
+        await paymentPage.handlePaymentRedirect();
       }
 
       // 8️⃣ Confirmation

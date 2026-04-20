@@ -7,102 +7,116 @@ export class PatientPage {
     this.page = page;
   }
 
-  // Verify patient page loaded
-  async verifyLoaded() {
-    // Wait a little for animation + API
-    await this.page.waitForTimeout(2000);
-
-    // Patient cards usually inside horizontal container
-    const patientCards = this.page.locator('div.sa-patient-card, div[class*="patient"]');
-
-    // Wait until at least one patient appears
-    await expect(patientCards.first()).toBeVisible({ timeout: 20000 });
-  }
-
-  // Select first patient (main patient)
-  async selectFirstPatient() {
-
-  const patientCards = this.page.locator(
-    'div.sa-patient-card, div[class*="patient"]'
-  );
-
-  // Wait until at least one card is visible
-  await patientCards.first().waitFor({ state: 'visible', timeout: 20000 });
-
-  const count = await patientCards.count();
-
-  for (let i = 0; i < count; i++) {
-    const card = patientCards.nth(i);
-
-    if (await card.isVisible()) {
-      await card.scrollIntoViewIfNeeded();
-      await this.page.waitForTimeout(300);
-      await card.click();
-      break;
+  // ---------------- Common Loader Wait ----------------
+  async waitForLoaderToDisappear() {
+    const loader = this.page.locator('.sa-loader-bg');
+    try {
+      await loader.waitFor({ state: 'hidden', timeout: 20000 });
+    } catch {
+      // loader not present
     }
   }
-}
-async handleInsurancePopup() {
-await this.page.waitForTimeout(1000); // Wait for potential popup to appear
-await this.page.getByRole('button', { name: 'No' }).first().click();
 
-}
+  // ---------------- Verify Patient Page ----------------
+  async verifyLoaded() {
+    const patients = this.page.locator('ul.sa-carousel li');
+    await patients.first().waitFor({ state: 'visible', timeout: 20000 });
+  }
 
-async fillHealthInfo() {
-// Wait until Required health information popup appears
-await this.page.getByText('Required health information', { exact: true })
-  .waitFor({ timeout: 30000 });
+  // ---------------- Select First Patient ----------------
+  async selectFirstPatient() {
+    const patients = this.page.locator('ul.sa-carousel li:visible');
 
-/* ---------------- Height ---------------- */
-await this.page.locator('input[name="Height"]').fill('166');
+    await patients.first().waitFor({ state: 'visible', timeout: 20000 });
 
-/* ---------------- Weight ---------------- */
-await this.page.locator('input[name="Weight"]').fill('61');
+    await this.waitForLoaderToDisappear();
 
-/* ---- Are you a chronic disease patient? ---- */
-await this.page
-  .locator('div')
-  .filter({ hasText: 'Are you a chronic disease patient' })
-  .locator('label[for^="no0"]')
-  .first()
-  .click();
+    await patients.first().scrollIntoViewIfNeeded();
+    await patients.first().click();
+  }
 
-/* ---- Have you had surgery within last 3 month ---- */
-await this.page
-  .locator('div')
-  .filter({ hasText: 'have u had surgery' })
-  .locator('label[for^="no1"]')
-  .first()
-  .click();
+  // ---------------- Insurance Popup (UPDATED) ----------------
+  async handleInsurancePopup(option: 'Yes' | 'No') {
 
-/* ---- Did you undergo any surgeries ---- */
-await this.page
-  .locator('div')
-  .filter({ hasText: 'Did you undergo any surgeries' })
-  .locator('label[for^="yes2"]')
-  .first()
-  .click();
+    const popupText = this.page.getByText(
+      'Would you like to continue with insurance ?',
+      { exact: true }
+    );
 
+    const button = this.page.getByRole('button', { name: option, exact: true }).first();
 
-/* ---------------- Save ---------------- */
-await this.page.getByRole('button', { name: 'Save' }).click();
-await this.page.waitForTimeout(2000); // Wait for save to process
+    await this.waitForLoaderToDisappear();
 
-}
+    // ✅ Check if popup appears
+    if (await popupText.isVisible({ timeout: 5000 }).catch(() => false)) {
 
-async clickContinueButton(){
- 
-  const continueButton = this.page.locator('button').filter({ hasText: 'Continue' }).first();
-  await continueButton.waitFor({ state: 'visible', timeout: 2000 });
-  await continueButton.click();
-}
+      await popupText.waitFor({ state: 'visible', timeout: 20000 });
 
-   // ---------------- Common Continue (All services) ----------------
+      await this.waitForLoaderToDisappear(); // extra safety
+
+      await button.waitFor({ state: 'visible', timeout: 20000 });
+      await button.click();
+    }
+  }
+
+  // ---------------- Health Info ----------------
+  async fillHealthInfo() {
+    await this.page.getByText('Required health information', { exact: true })
+      .waitFor({ timeout: 30000 });
+
+    await this.waitForLoaderToDisappear();
+
+    await this.page.locator('input[name="Height"]').fill('166');
+    await this.page.locator('input[name="Weight"]').fill('61');
+
+    // Chronic disease → No
+    await this.page
+      .locator('div')
+      .filter({ hasText: 'Are you a chronic disease patient' })
+      .locator('label[for^="no"]')
+      .first()
+      .click();
+
+    // Surgery last 3 months → No
+    await this.page
+      .locator('div')
+      .filter({ hasText: 'have u had surgery' })
+      .locator('label[for^="no"]')
+      .first()
+      .click();
+
+    // Undergo surgeries → Yes
+    await this.page
+      .locator('div')
+      .filter({ hasText: 'Did you undergo any surgeries' })
+      .locator('label[for^="yes"]')
+      .first()
+      .click();
+
+    const saveBtn = this.page.getByRole('button', { name: 'Save' });
+
+    await this.waitForLoaderToDisappear();
+    await saveBtn.click();
+    await this.waitForLoaderToDisappear();
+  }
+
+  // ---------------- Continue Button ----------------
+  async clickContinueButton() {
+    const continueBtn = this.page.getByRole('button', { name: 'Continue' });
+
+    await this.waitForLoaderToDisappear();
+
+    await continueBtn.waitFor({ state: 'visible', timeout: 20000 });
+    await continueBtn.click();
+  }
+
+  // ---------------- Continue to Payment ----------------
   async clickContinueToReachPayment() {
-    const continueBtn1 = this.page.getByRole('button', { name: 'Continue' });
+    const continueBtn = this.page.getByRole('button', { name: 'Continue' });
 
-    await continueBtn1.waitFor({ state: 'visible', timeout: 20000 });
-    await this.page.waitForTimeout(500);
-    await continueBtn1.click();
+    await this.waitForLoaderToDisappear();
+
+    await continueBtn.waitFor({ state: 'visible', timeout: 20000 });
+    await continueBtn.click();
   }
 }

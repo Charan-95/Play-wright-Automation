@@ -49,7 +49,7 @@ export class SlotPage {
       async verifyNurseVisitLoaded() {
     await expect(
       this.page.getByText('Select Center', { exact: true })
-    ).toBeVisible();
+    ).toBeVisible({timeout: 20000});
   } 
 
 // ---------------- Select First Hospital ----------------
@@ -60,23 +60,27 @@ const firstHospital = this.page.locator('li.sa-nurse-det').first();
 await firstHospital.click();
 }
 
-  // Wait for slots to load
- async verifyNurseslotsLoaded() {
-  const slotContainer = this.page.locator('ul.sa-slot-btn.sa-available-slots');
+// 🔹 Generic method to verify slots
+async verifySlotsLoaded(slotType: 'nurse' | 'kids') {
+  const selector =
+    slotType === 'nurse'
+      ? 'ul.sa-slot-btn.sa-available-slots'
+      : 'ul.sa-slot-btn.sa-kids-slot';
+
+  const slotContainer = this.page.locator(selector);
   const slots = slotContainer.locator('li');
 
-  // Wait for container
   await expect(slotContainer).toBeVisible({ timeout: 20000 });
-
-  // Wait until at least one slot is visible
   await expect(slots.first()).toBeVisible({ timeout: 20000 });
 }
-  // Select first av slot
-async selectNurseFirstAvailableSlot() {
-  const slotContainer = this.page.locator('ul.sa-slot-btn.sa-available-slots');
-  const slots = slotContainer.locator('li');
+ async selectFirstAvailableSlot1(slotType: 'nurse' | 'kids') {
+  const selector =
+    slotType === 'nurse'
+      ? 'ul.sa-slot-btn.sa-available-slots'
+      : 'ul.sa-slot-btn.sa-kids-slot';
 
-  // Wait until slots are loaded
+  const slots = this.page.locator(`${selector} li`);
+
   await expect(slots.first()).toBeVisible({ timeout: 20000 });
 
   const count = await slots.count();
@@ -93,9 +97,7 @@ async selectNurseFirstAvailableSlot() {
   }
 
   throw new Error('❌ No available slot found to select');
-
 }
-
 
   // Click Next
   async clickNext() {
