@@ -40,7 +40,7 @@ if (isBookingOptionsVisible) {
   const patientPage = new PatientPage(page);
   await patientPage.verifyLoaded();
   await patientPage.selectFirstPatient();
-  await patientPage.handleInsurancePopup();
+  await patientPage.handleInsurancePopup('No');
   await patientPage.clickContinueToReachPayment();
     
   //Payment page

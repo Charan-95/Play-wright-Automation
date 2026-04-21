@@ -188,4 +188,26 @@ export class PackagesPage {
 
     await this.page.getByRole('button', { name: 'Continue' }).click();
   }
+
+  // ✅ NEW METHOD → Caregiver package selection
+  async verifyCaregiverLoaded() {
+    await expect(
+      this.page.getByText('Caregiver', { exact: true })
+    ).toBeVisible();
+  }
+  async selectCaregiverPackage(procedureName: string) {
+
+    // Click procedure text
+    await this.page.getByText(procedureName).waitFor({ state: 'visible' });
+    await this.page.getByText(procedureName).click();
+  }
+
+  async selectPackageDetailsLoaded(){
+    await expect(this.page.getByText('Package Details', { exact: true })).toBeVisible();
+  }
+
+  async selectCaregiverDuration(){
+    await this.page.getByRole('heading', { name: '1 Week - 12 Hours a day' }).click();
+    await this.page.getByRole('button', { name: 'Continue' }).click();
+  }
 }

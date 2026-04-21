@@ -119,4 +119,12 @@ export class PatientPage {
     await continueBtn.waitFor({ state: 'visible', timeout: 20000 });
     await continueBtn.click();
   }
+
+  // ---------------- send Request (Caregiver) ----------------
+  async clickSendRequest() {
+    const sendRequestBtn = this.page.getByRole('button', { name: 'Send Request' });
+    await this.waitForLoaderToDisappear();
+    await sendRequestBtn.waitFor({ state: 'visible', timeout: 20000 });
+    await sendRequestBtn.click();
+}
 }

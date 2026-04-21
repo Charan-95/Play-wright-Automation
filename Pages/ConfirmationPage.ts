@@ -36,4 +36,11 @@ export class ConfirmationPage {
   async goToMyBooking() {
     await this.page.getByText('My Booking', { exact: true }).click();
   }
+
+  async verifyCaregiverConfirmation() {   
+    // await this.page.waitForURL(/request-successfull/, { timeout: 100000 });
+    await this.page.getByRole('heading', { name: 'Your request sent Successfully!' }).waitFor({ state: 'visible', timeout: 30000 });
+    await this.page.getByText('Home', { exact: true }).click();
+
+}
 }
